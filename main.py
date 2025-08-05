@@ -33,4 +33,13 @@ widgets = {
     "chronic_stress": ["experience chronic stress"]
 }
 
+def create_widgets(lbl_name,lbl_text,row, column):
+    lbl = tk.Label(frm, text="Do you " + lbl_text +"?")
+    listbox = tk.Listbox(frm, name=lbl_name, width=5, height=2, exportselection=False)
+    listbox.insert(0,"No")
+    listbox.insert(1,"Yes")
+    lbl.grid(row=row, column=column)
+    listbox.grid(row=row+1, column=column)
+    return listbox
+
 root.mainloop()
