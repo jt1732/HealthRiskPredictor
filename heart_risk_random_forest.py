@@ -31,3 +31,5 @@ pipeline = ImbPipeline(steps=[('classifier', RandomForestClassifier(
         random_state=42,
         n_jobs=-1
     ))])
+
+pipeline.fit(x_train, y_train)
