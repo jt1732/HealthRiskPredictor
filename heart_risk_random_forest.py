@@ -17,10 +17,10 @@ features = [
     "Family_History","Chronic_Stress","Gender","Age",
 ]
 
-df["growth"] = (df["Heart_Risk"] == 1)
+df["risk"] = (df["Heart_Risk"] == 1)
 
 x = df[features]
-y = df["growth"]
+y = df["risk"]
 
 x_train, x_test, y_train, y_test = train_test_split(x, y, test_size=0.2, random_state=42)
 
@@ -50,12 +50,11 @@ plt.tight_layout()
 plt.show()
 
 results = df.loc[x_test.index].copy()
-results["Predicted Growth"] = y_pred
 results["Probability"] = y_proba
 
-top_growth = results.sort_values("Probability", ascending=False)
-print("\nTop predicted growth stocks:")
-print(results[["Probability", "Heart_Risk"]].head(10))
+top_risk = results[results["Heart_Risk"] == 1].sort_values("Probability", ascending=False)
+print("\nTop Heart Risk:")
+print(top_risk[["Probability", "Heart_Risk"]].head(10))
 
 joblib.dump(pipeline, 'random_forest_model.joblib')
 
