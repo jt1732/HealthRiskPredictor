@@ -33,3 +33,10 @@ pipeline = ImbPipeline(steps=[('classifier', RandomForestClassifier(
     ))])
 
 pipeline.fit(x_train, y_train)
+
+y_pred = pipeline.predict(x_test)
+y_proba = pipeline.predict_proba(x_test)[:, 1]
+
+print("Classification Report:")
+print(classification_report(y_test, y_pred))
+print(f"ROC AUC Score: {roc_auc_score(y_test, y_proba):.2f}")
