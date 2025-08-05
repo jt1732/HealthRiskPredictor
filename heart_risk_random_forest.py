@@ -7,7 +7,7 @@ from sklearn.metrics import classification_report, roc_auc_score, precision_reca
 import matplotlib.pyplot as plt
 import joblib
 
-df = pd.read_csv("")
+df = pd.read_csv("lifestyleClassification.csv")
 
 features = [
     "Chest_Pain","Shortness_of_Breath","Fatigue","Palpitations",
@@ -20,7 +20,7 @@ features = [
 df["growth"] = (df["Heart_Risk"] == 1)
 
 x = df[features]
-y = df["Growth"]
+y = df["growth"]
 
 x_train, x_test, y_train, y_test = train_test_split(x, y, test_size=0.2, random_state=42)
 
