@@ -48,3 +48,12 @@ plt.barh(np.array(x.columns)[sorted_idx], importance[sorted_idx])
 plt.title("Feature Importance")
 plt.tight_layout()
 plt.show()
+
+results = df.loc[x_test.index].copy()
+results["Predicted Growth"] = y_pred
+results["Probability"] = y_proba
+
+top_growth = results.sort_values("Probability", ascending=False)
+print("\nTop predicted growth stocks:")
+print(results[["Probability", "Heart_Risk"]].head(10))
+
