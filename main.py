@@ -42,4 +42,10 @@ def create_widgets(lbl_name,lbl_text,row, column):
     listbox.grid(row=row+1, column=column)
     return listbox
 
+widget_complete = []
+for i, (key, widget_info) in enumerate(widgets.items()):
+    row = math.floor(i / 4) * 2
+    col = i % 4
+    widget_complete.append(create_widgets(key, widget_info[0], row, col))
+
 root.mainloop()
