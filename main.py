@@ -1,6 +1,7 @@
 import tkinter as tk
 import math
 import joblib
+import pandas as pd
 import os
 from dotenv import load_dotenv
 from openai import OpenAI
@@ -49,4 +50,15 @@ for i, (key, widget_info) in enumerate(widgets.items()):
     col = i % 4
     widget_complete.append(create_widgets(key, widget_info[0], row, col))
 
+def predict():
+    dictData = {}
+    for widget in widget_complete:
+        for i in widget.curselection():
+            dictData[widget.winfo_name()] = 1 if widget.get(i) == "Yes" else 0
+
+    df = pd.DataFrame(dictData, index=[0])
+    print(df)
+
+btn = tk.Button(root,text="Click Me", command=predict)
+btn.grid()
 root.mainloop()
