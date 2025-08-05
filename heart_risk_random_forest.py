@@ -57,3 +57,5 @@ top_growth = results.sort_values("Probability", ascending=False)
 print("\nTop predicted growth stocks:")
 print(results[["Probability", "Heart_Risk"]].head(10))
 
+joblib.dump(pipeline, 'random_forest_model.joblib')
+
