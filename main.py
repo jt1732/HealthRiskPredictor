@@ -6,6 +6,7 @@ from dotenv import load_dotenv
 from openai import OpenAI
 
 load_dotenv()
+loaded_model = joblib.load('random_forest_model.joblib')
 client = OpenAI(api_key=os.getenv("OPENAI_API_KEY"))
 
 # Create a simple GUI
