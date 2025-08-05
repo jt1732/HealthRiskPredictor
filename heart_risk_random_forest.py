@@ -40,3 +40,11 @@ y_proba = pipeline.predict_proba(x_test)[:, 1]
 print("Classification Report:")
 print(classification_report(y_test, y_pred))
 print(f"ROC AUC Score: {roc_auc_score(y_test, y_proba):.2f}")
+
+importance = pipeline.named_steps['classifier'].feature_importances_
+sorted_idx = np.argsort(importance)
+plt.figure(figsize=(8, 8))
+plt.barh(np.array(x.columns)[sorted_idx], importance[sorted_idx])
+plt.title("Feature Importance")
+plt.tight_layout()
+plt.show()
