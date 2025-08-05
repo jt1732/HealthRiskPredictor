@@ -23,3 +23,11 @@ x = df[features]
 y = df["Growth"]
 
 x_train, x_test, y_train, y_test = train_test_split(x, y, test_size=0.2, random_state=42)
+
+pipeline = ImbPipeline(steps=[('classifier', RandomForestClassifier(
+        n_estimators=1000,
+        max_depth=20,
+        min_samples_leaf=250,
+        random_state=42,
+        n_jobs=-1
+    ))])
