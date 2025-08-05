@@ -16,3 +16,10 @@ features = [
     "Diabetes","Smoking","Obesity","Sedentary_Lifestyle",
     "Family_History","Chronic_Stress","Gender","Age",
 ]
+
+df["growth"] = (df["Heart_Risk"] == 1)
+
+x = df[features]
+y = df["Growth"]
+
+x_train, x_test, y_train, y_test = train_test_split(x, y, test_size=0.2, random_state=42)
