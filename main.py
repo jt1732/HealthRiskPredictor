@@ -1,4 +1,5 @@
 import tkinter as tk
+from tkinter import messagebox
 import math
 import joblib
 import pandas as pd
@@ -17,27 +18,28 @@ frm = tk.Frame(root, padx=10, pady=10)
 frm.grid()
 
 widgets = {
-    "chest_pain": ["experience chest pain"],
-    "shortness_of_breath": ["experience shortness of breath"],
-    "fatigue": ["experience fatigue"],
-    "palpitations": ["experience palpitations"],
-    "dizziness": ["experience dizziness"],
-    "swelling": ["experience swelling"],
-    "arm_jaw_back_pain": ["experience pain in your arms, jaw or back"],
-    "cold_sweats_nausea": ["experience cold sweats or nausea"],
-    "high_bp": ["experience high BP"],
-    "high_cholesterol": ["have high cholesterol"],
-    "diabetes": ["have diabetes"],
-    "smoking": ["smoke"],
-    "obesity": ["have obesity"],
-    "sedentary_lifestyle": ["have a sedentary lifestyle"],
-    "family_history": ["have a family history"],
-    "chronic_stress": ["experience chronic stress"]
+    "Chest_Pain": ["experience chest pain"],
+    "Shortness_of_Breath": ["experience shortness of breath"],
+    "Fatigue": ["experience fatigue"],
+    "Palpitations": ["experience palpitations"],
+    "Dizziness": ["experience dizziness"],
+    "Swelling": ["experience swelling"],
+    "Pain_Arms_Jaw_Back": ["experience pain in your arms, jaw or back"],
+    "Cold_Sweats_Nausea": ["experience cold sweats or nausea"],
+    "High_BP": ["experience high BP"],
+    "High_Cholesterol": ["have high cholesterol"],
+    "Diabetes": ["have diabetes"],
+    "Smoking": ["smoke"],
+    "Obesity": ["have obesity"],
+    "Sedentary_Lifestyle": ["have a sedentary lifestyle"],
+    "Family_History": ["have a family history"],
+    "Chronic_Stress": ["experience chronic stress"]
 }
 
 def create_widgets(lbl_name,lbl_text,row, column):
     lbl = tk.Label(frm, text="Do you " + lbl_text +"?")
-    listbox = tk.Listbox(frm, name=lbl_name, width=5, height=2, exportselection=False)
+    listbox = tk.Listbox(frm, name=lbl_name.lower(), width=5, height=2, exportselection=False)
+    listbox.original_name = lbl_name
     listbox.insert(0,"No")
     listbox.insert(1,"Yes")
     lbl.grid(row=row, column=column)
@@ -53,12 +55,26 @@ for i, (key, widget_info) in enumerate(widgets.items()):
 def predict():
     dictData = {}
     for widget in widget_complete:
+        if not widget.curselection():
+            messagebox.showwarning("Warning", "Please fill in all options")
+            return
         for i in widget.curselection():
-            dictData[widget.winfo_name()] = 1 if widget.get(i) == "Yes" else 0
+            dictData[widget.original_name] = 1 if widget.get(i) == "Yes" else 0
 
     df = pd.DataFrame(dictData, index=[0])
-    print(df)
+    predictions = loaded_model.predict(df)
+    probabilities = loaded_model.predict_proba(df)
+    if predictions[0]:
+        outcome = "likely to be at"
+    else:
+        outcome = "unlikely to be at"
+    prob = round(probabilities[0, 1] * 100, 2)
+    txtBox.delete("0.0", tk.END)
+    txtBox.insert('0.0', f"Our model predicts that with {prob}% probability you are {outcome} heart risk")
 
+
+txtBox = tk.Text(root, height=10, width =48)
 btn = tk.Button(root,text="Click Me", command=predict)
+txtBox.grid(pady=10)
 btn.grid()
 root.mainloop()
