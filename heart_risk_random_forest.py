@@ -9,6 +9,7 @@ import joblib
 
 df = pd.read_csv("lifestyleClassification.csv")
 
+
 features = [
     "Chest_Pain","Shortness_of_Breath","Fatigue","Palpitations",
     "Dizziness","Swelling","Pain_Arms_Jaw_Back",

@@ -106,6 +106,7 @@ def accessOpenAI(client, prob, predictions, df):
     print(response.output_text)
     return response.output_text
 
+
 def submit():
     try:
         predictions, prob, df = predict()
