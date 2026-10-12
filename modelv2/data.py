@@ -1,19 +1,44 @@
+from pathlib import Path
+
 import pandas as pd
 from sklearn.model_selection import StratifiedShuffleSplit
 
+DATA_PATH = Path(__file__).parent / "cardio.csv"
 DATA_ENTRIES = 70000
-
-cardio_csv = pd.read_csv('modelv2/cardio.csv')
-assert len(cardio_csv) == DATA_ENTRIES, f"The cardio.csv file should contain {DATA_ENTRIES} rows."
-
-train_idx, test_idx = next(StratifiedShuffleSplit(n_splits=1, test_size=0.2, random_state=42).split(cardio_csv, cardio_csv['cardio']))
-
-train_df = cardio_csv.iloc[train_idx]
-test_df = cardio_csv.iloc[test_idx]
+TARGET = "cardio"
+TEST_SIZE = 0.2
+RANDOM_STATE = 42
 
 
-cardio_info = cardio_csv.info()
-print(cardio_info)
+def load_data(path=DATA_PATH):
+    """Load the raw cardio dataset and check it has the expected number of rows."""
+    cardio_csv = pd.read_csv(path)
+    assert len(cardio_csv) == DATA_ENTRIES, f"The cardio.csv file should contain {DATA_ENTRIES} rows."
+    return cardio_csv
+
+
+def split_data(cardio_csv=None):
+    """Stratified train/test split, so both sets keep the same cardio ratio."""
+    if cardio_csv is None:
+        cardio_csv = load_data()
+
+    train_idx, test_idx = next(
+        StratifiedShuffleSplit(n_splits=1, test_size=TEST_SIZE, random_state=RANDOM_STATE)
+        .split(cardio_csv, cardio_csv[TARGET])
+    )
+
+    train_df = cardio_csv.iloc[train_idx]
+    test_df = cardio_csv.iloc[test_idx]
+    return train_df, test_df
+
+
+if __name__ == "__main__":
+    cardio_csv = load_data()
+    cardio_csv.info()
+
+    train_df, test_df = split_data(cardio_csv)
+    print(f"\nTrain: {len(train_df)} rows, cardio rate {train_df[TARGET].mean():.4f}")
+    print(f"Test:  {len(test_df)} rows, cardio rate {test_df[TARGET].mean():.4f}")
 
 """
 Cardio csv has loaded with correct number of entries and columns.
