@@ -1,5 +1,11 @@
+from sklearn.compose import ColumnTransformer
+from sklearn.preprocessing import StandardScaler
+
+NUMERIC = ["age", "height", "weight", "bmi", "ap_hi", "ap_lo"]
+CATEGORICAL = ["gender", "cholesterol", "gluc", "smoke", "alco", "active"]
+
+
 def remove_invalid_rows(df):
-    """Drop duplicate and implausible rows"""
     start = len(df)
 
     before = len(df)
@@ -36,11 +42,18 @@ def remove_invalid_rows(df):
 
 
 def add_features(df):
-    """Convert age to years, add BMI and drop id. Nothing is learned from the data, so it's safe on train and test"""
     df = df.copy()  # work on a copy so the original DataFrame isn't changed
     df["age"] = df["age"] / 365.25
     df["bmi"] = df["weight"] / (df["height"] / 100) ** 2
     return df.drop(columns="id")
+
+
+def build_preprocessor():
+    #Scale the numeric columns
+    return ColumnTransformer([
+        ("scale", StandardScaler(), NUMERIC),
+        ("keep", "passthrough", CATEGORICAL),
+    ])
 
 
 if __name__ == "__main__":
@@ -59,3 +72,11 @@ if __name__ == "__main__":
     train_features = add_features(train_clean)
     print("\nColumns after add_features:", list(train_features.columns))
     print(train_features[["age", "bmi"]].describe().round(1))
+
+    test_features = add_features(test_clean)
+    preprocessor = build_preprocessor()
+    train_scaled = preprocessor.fit_transform(train_features)  # learn mean/std from train, then apply
+    test_scaled = preprocessor.transform(test_features)  # apply train's mean/std to test, learn nothing
+    print("\nMean of each column after scaling (numeric should be about 0):")
+    print("train:", train_scaled.mean(axis=0).round(2))
+    print("test: ", test_scaled.mean(axis=0).round(2))
