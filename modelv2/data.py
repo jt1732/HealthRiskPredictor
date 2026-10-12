@@ -11,14 +11,12 @@ RANDOM_STATE = 42
 
 
 def load_data(path=DATA_PATH):
-    """Load the raw cardio dataset and check it has the expected number of rows."""
     cardio_csv = pd.read_csv(path)
     assert len(cardio_csv) == DATA_ENTRIES, f"The cardio.csv file should contain {DATA_ENTRIES} rows."
     return cardio_csv
 
 
 def split_data(cardio_csv=None):
-    """Stratified train/test split, so both sets keep the same cardio ratio."""
     if cardio_csv is None:
         cardio_csv = load_data()
 
@@ -40,7 +38,3 @@ if __name__ == "__main__":
     print(f"\nTrain: {len(train_df)} rows, cardio rate {train_df[TARGET].mean():.4f}")
     print(f"Test:  {len(test_df)} rows, cardio rate {test_df[TARGET].mean():.4f}")
 
-"""
-Cardio csv has loaded with correct number of entries and columns.
-Cardio info tells us that all rows have non-null values and the data types of each column are consistent
-"""
