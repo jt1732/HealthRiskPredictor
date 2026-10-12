@@ -35,6 +35,14 @@ def remove_invalid_rows(df):
     return df
 
 
+def add_features(df):
+    """Convert age to years, add BMI and drop id. Nothing is learned from the data, so it's safe on train and test"""
+    df = df.copy()  # work on a copy so the original DataFrame isn't changed
+    df["age"] = df["age"] / 365.25
+    df["bmi"] = df["weight"] / (df["height"] / 100) ** 2
+    return df.drop(columns="id")
+
+
 if __name__ == "__main__":
     from data import split_data
 
@@ -47,3 +55,7 @@ if __name__ == "__main__":
     """
     print("\nTest:")
     test_clean = remove_invalid_rows(test_df)
+
+    train_features = add_features(train_clean)
+    print("\nColumns after add_features:", list(train_features.columns))
+    print(train_features[["age", "bmi"]].describe().round(1))
