@@ -1,9 +1,10 @@
 import pandas as pd
 from sklearn.dummy import DummyClassifier
-from sklearn.ensemble import RandomForestClassifier
+from sklearn.ensemble import HistGradientBoostingClassifier, RandomForestClassifier
 from sklearn.linear_model import LogisticRegression
 from sklearn.metrics import make_scorer, recall_score
 from sklearn.model_selection import StratifiedKFold, cross_validate
+from sklearn.naive_bayes import GaussianNB
 from sklearn.pipeline import Pipeline
 from sklearn.tree import DecisionTreeClassifier
 
@@ -37,6 +38,8 @@ MODELS = {
     "logistic regression": LogisticRegression(max_iter=1000),
     "decision tree": DecisionTreeClassifier(max_depth=6, random_state=RANDOM_STATE),
     "random forest": RandomForestClassifier(n_estimators=200, min_samples_leaf=20, n_jobs=-1, random_state=RANDOM_STATE),
+    "hist gradient boosting": HistGradientBoostingClassifier(random_state=RANDOM_STATE),
+    "naive bayes": GaussianNB(),
 }
 
 if __name__ == "__main__":
